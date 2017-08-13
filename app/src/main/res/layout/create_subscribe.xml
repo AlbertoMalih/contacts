@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textColorHint="#d3d3d3"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#d3d3d3"
+        android:hint="@string/write_name"
+        android:textSize="18sp"/>
+
+
+    <EditText
+        android:id="@+id/et_mail"
+        android:enabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#d3d3d3"
+        android:hint="@string/write_email"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/et_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:hint="@string/write_number"
+        android:textColorHint="#d3d3d3"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/et_home_number"
+        android:enabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#d3d3d3"
+        android:hint="@string/write_home_number"
+        android:textSize="18sp" />
+
+
+    <EditText
+        android:id="@+id/et_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#000000"
+        android:hint="@string/write_group"
+        android:textColor="#d3d3d3"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buttonSave"
+        android:text="@string/save"
+        android:textSize="25sp" />
+
+</LinearLayout>

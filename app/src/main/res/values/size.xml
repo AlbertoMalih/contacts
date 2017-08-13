@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="title">24sp</dimen>
+    <dimen name="h3">18sp</dimen>
+
+
+    <dimen name="padding">6dp</dimen>
+    <dimen name="good_style">8dp</dimen>
+</resources>

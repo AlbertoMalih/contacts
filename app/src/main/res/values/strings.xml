@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">contacts</string>
+
+    <string name="type">type</string>
+    <string name="create">create</string>
+    <string name="back">back11</string>
+    <string name="time">time</string>
+    <string name="date">date</string>
+    <string name="delete">delete</string>
+    <string name="edit">edit</string>
+    <string name="delete_all">delete all</string>
+    <string name="write_group">write group</string>
+    <string name="write_home_number">write home number</string>
+    <string name="write_number">write number</string>
+    <string name="save">save</string>
+    <string name="textEmail">text Email</string>
+    <string name="subject">subject</string>
+    <string name="about_item">about the application</string>
+    <string name="cancel">cansel</string>
+    <string name="send_email">send email</string>
+    <string name="write_email">write email</string>
+    <string name="write_name">write nane</string>
+
+
+    <string name="title_activity_fullscreen" translatable="false">FullscreenActivity</string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
+    <string name="item_description">" about the application"</string>
+</resources>
