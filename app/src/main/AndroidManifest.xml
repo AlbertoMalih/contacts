@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
+        android:label="@string/all_subscribers"
         android:supportsRtl="true">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -16,15 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChangeActivity" />
+
+        <activity android:name=".ChangeOrCreateActivity" />
 
 
         <uses-permission android:name="android.permission.CALL_PHONE" />
         <uses-permission android:name="android.permission.ACTION_CALL" />
         <uses-permission android:name="android.permission.INTERNET" />
         <uses-permission android:name="android.permission.CAMERA" />
-        <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
-        <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     </application>
 

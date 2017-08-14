@@ -2,6 +2,14 @@
     <string name="app_name">contacts</string>
 
     <string name="type">type</string>
+    <string name="find">find</string>
+    <string name="all_subscribers">all subscribers</string>
+    <string name="find_subscribers">find subscribers</string>
+    <string name="find_name">find name</string>
+    <string name="find_group">find group</string>
+    <string name="find_email">find email</string>
+    <string name="find_number">find number</string>
+    <string name="find_home_number">find home number</string>
     <string name="create">create</string>
     <string name="back">back11</string>
     <string name="time">time</string>

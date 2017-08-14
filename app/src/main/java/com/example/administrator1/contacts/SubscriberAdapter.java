@@ -53,6 +53,14 @@ public class SubscriberAdapter extends BaseAdapter {
 
         return friendView;
     }
+
+    public List<Subscriber> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(List<Subscriber> subscribers) {
+        this.subscribers = subscribers;
+    }
 }
 
 

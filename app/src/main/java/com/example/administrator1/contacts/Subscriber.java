@@ -33,6 +33,21 @@ public class Subscriber implements Parcelable {
         id = subscriber.getId();
     }
 
+    public boolean equalInVaues(String name, String email, String number, String group, String homeNumber){
+
+        boolean validName = (name.isEmpty() || this.name.equals(name));//( name.isEmpty() ? true : this.name.equals(name));
+        boolean validGroup = (group.isEmpty() || this.group.equals(group));//( group.isEmpty() ? true : this.group.equals(group));
+        boolean validEmail = (email.isEmpty() || this.email.equals(email));//( email.isEmpty() ? true : this.email.equals(email));
+        boolean validNumber = (number.isEmpty() || this.number.equals(number));//( number.isEmpty() ? true : this.number.equals(number));
+        boolean validHomeNumber = (homeNumber.isEmpty() || this.homeNumber.equals(homeNumber));// ( homeNumber.isEmpty() ? true : this.homeNumber.equals(homeNumber));
+
+        if (validHomeNumber && validEmail && validNumber && validName && validGroup) {
+            return true;
+        }
+
+        return false;
+    }
+
     public String getNumber() {
         return number;
     }

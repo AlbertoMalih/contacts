@@ -1,17 +1,11 @@
 package com.example.administrator1.contacts;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -21,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
@@ -35,8 +28,9 @@ public class MainActivity extends Activity {
     public static final int UPDATE_TASK_CODE = 22;
     private static final int REQUEST_PHONE_CALL = 1;
     private DBHelper dbHelper;
+    private boolean findListSubscribers = false;
     private volatile List<Subscriber> subscribers;
-//    private Button createTaskButton;
+    //    private Button createTaskButton;
     private SubscriberAdapter subscriberAdapter;
     private ListView lvTasks;
     private Dialogs dialogs;
@@ -51,7 +45,6 @@ public class MainActivity extends Activity {
 //            }
 //        }
 //    };
-//todo в контекстном меню создать кнопку удаления всех елементов и ею просто зачистить бд
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +79,30 @@ public class MainActivity extends Activity {
             case R.id.delete_all:
                 deleteAllTask();
                 return true;
+            case R.id.find:
+                findSubscriber();
+                return true;
             case R.id.create_number:
                 createSubscriber();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void findSubscriber() {
+        dialogs.createDFFind().show();
+
+    }
+
+    public List<Subscriber> findSubscribers(String name, String email, String number, String group, String homeNumber) {
+        List<Subscriber> result = new ArrayList<>();
+        for (Subscriber subscriber : subscribers) {
+            if (subscriber.equalInVaues(name, email, number, group, homeNumber)) {
+                result.add(subscriber);
+            }
+        }
+        return result;
     }
 
     private void createSubscriber() {
@@ -113,11 +124,25 @@ public class MainActivity extends Activity {
 //        createIntentForWorkWithTask(new Subscriber(), CREATE_TASK_CODE, info == null ? 0 : info.position);
 //    }
 
+
+    @Override
+    public void finish() {
+        if (findListSubscribers) {
+            findListSubscribers = false;
+            getActionBar().setTitle(R.string.all_subscribers);
+            subscriberAdapter.setSubscribers(subscribers);
+            subscriberAdapter.notifyDataSetChanged();
+            return;
+        } else {
+            super.finish();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("IN ON ACTIVITY RESULT", "IN ON ACTIVITY RESULT");
         Log.d("IN ON ACTIVITY RESULT", requestCode + " - request code" + resultCode + " - resultCode " + data.getExtras().getInt("function_code") + " - function code");
-        if (requestCode == ChangeActivity.CREATE_SUBSCRIBE_ACTIVITY_CODE) {
+        if (requestCode == ChangeOrCreateActivity.CREATE_SUBSCRIBE_ACTIVITY_CODE) {
             Log.d("TAG TRUE", "true");
             if (resultCode == RESULT_OK) {
                 switch (data.getExtras().getInt("function_code")) {
@@ -244,11 +269,11 @@ public class MainActivity extends Activity {
     }
 
     public void createIntentForWorkWithTask(Subscriber subscriber, int functionCode, int position) {
-        Intent intent = new Intent(this, ChangeActivity.class);
+        Intent intent = new Intent(this, ChangeOrCreateActivity.class);
         intent.putExtra("subscriber", subscriber);
         intent.putExtra("function_code", functionCode);
         intent.putExtra("position_task", position);
-        startActivityForResult(intent, ChangeActivity.CREATE_SUBSCRIBE_ACTIVITY_CODE);
+        startActivityForResult(intent, ChangeOrCreateActivity.CREATE_SUBSCRIBE_ACTIVITY_CODE);
     }
 
     public Subscriber getTaskByPosition() {
@@ -265,6 +290,54 @@ public class MainActivity extends Activity {
         subscriberAdapter.notifyDataSetChanged();
     }
 
+    public DBHelper getDbHelper() {
+        return dbHelper;
+    }
+
+    public void setDbHelper(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    public SubscriberAdapter getSubscriberAdapter() {
+        return subscriberAdapter;
+    }
+
+    public void setSubscriberAdapter(SubscriberAdapter subscriberAdapter) {
+        this.subscriberAdapter = subscriberAdapter;
+    }
+
+    public ListView getLvTasks() {
+        return lvTasks;
+    }
+
+    public void setLvTasks(ListView lvTasks) {
+        this.lvTasks = lvTasks;
+    }
+
+    public Dialogs getDialogs() {
+        return dialogs;
+    }
+
+    public void setDialogs(Dialogs dialogs) {
+        this.dialogs = dialogs;
+    }
+
+    public boolean isFindListSubscribers() {
+        return findListSubscribers;
+    }
+
+    public void setFindListSubscribers(boolean findListSubscribers) {
+        this.findListSubscribers = findListSubscribers;
+    }
+
+    public AdapterView.AdapterContextMenuInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(AdapterView.AdapterContextMenuInfo info) {
+        this.info = info;
+    }
+
     public List<Subscriber> getSubscribers() {
         return subscribers;
     }
@@ -272,5 +345,6 @@ public class MainActivity extends Activity {
     public void setSubscribers(List<Subscriber> subscribers) {
         this.subscribers = subscribers;
     }
+
 
 }

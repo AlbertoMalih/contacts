@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ChangeActivity extends Activity {
+public class ChangeOrCreateActivity extends Activity {
     public static final int CREATE_SUBSCRIBE_ACTIVITY_CODE = 40;
     private Subscriber subscriber;
     private Intent intent;
@@ -63,11 +63,11 @@ public class ChangeActivity extends Activity {
             return;
         }
 
-        subscriber.setEmail(email);
-        subscriber.setName(editName.getText().toString());
-        subscriber.setNumber(number);
-        subscriber.setHomeNumber(editHomePhone.getText().toString());
-        subscriber.setGroup(editGroup.getText().toString());
+        subscriber.setEmail(email.trim());
+        subscriber.setName(editName.getText().toString().trim());
+        subscriber.setNumber(number.trim());
+        subscriber.setHomeNumber(editHomePhone.getText().toString().trim());
+        subscriber.setGroup(editGroup.getText().toString().trim());
 
         intent.putExtra("subscriber", subscriber);
         setResult(RESULT_OK, intent);
