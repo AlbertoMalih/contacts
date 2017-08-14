@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
     public List<Subscriber> findSubscribers(String name, String email, String number, String group, String homeNumber) {
         List<Subscriber> result = new ArrayList<>();
         for (Subscriber subscriber : subscribers) {
-            if (subscriber.equalInVaues(name, email, number, group, homeNumber)) {
+            if (subscriber.equalInValues(name, email, number, group, homeNumber)) {
                 result.add(subscriber);
             }
         }
