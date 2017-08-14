@@ -3,12 +3,10 @@ package com.example.administrator1.contacts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -59,17 +57,17 @@ public class Dialogs {
 
     public Dialog createDFFind() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activityThis);
-        final List<View> views = customView();
+        final List<View> views = createViewForFind();
         builder.setView(views.get(0))
                 .setPositiveButton(R.string.find, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //todo findMethod
-                        String name = ((EditText) views.get(ET_FIND_NAME)).getText().toString();
-                        String email = ((EditText) views.get(ET_FIND_EMAIL)).getText().toString();
-                        String number = ((EditText) views.get(ET_FIND_NUMBER)).getText().toString();
-                        String group = ((EditText) views.get(ET_FIND_GROUP)).getText().toString();
-                        String homeNumber = ((EditText) views.get(ET_FIND_HOME_NUMBER)).getText().toString();
+                        String name = ((EditText) views.get(ET_FIND_NAME)).getText().toString().trim();
+                        String email = ((EditText) views.get(ET_FIND_EMAIL)).getText().toString().trim();
+                        String number = ((EditText) views.get(ET_FIND_NUMBER)).getText().toString().trim();
+                        String group = ((EditText) views.get(ET_FIND_GROUP)).getText().toString().trim();
+                        String homeNumber = ((EditText) views.get(ET_FIND_HOME_NUMBER)).getText().toString().trim();
 
                         List<Subscriber> result = ((MainActivity) activityThis).findSubscribers( name, email, number, group, homeNumber);
 
@@ -86,7 +84,6 @@ public class Dialogs {
     }
 
     private void installFindingSubscribersInList(List<Subscriber> result){
-        ((MainActivity) activityThis).getSubscriberAdapter().setSubscribers(result);
          activityThis.getActionBar().setTitle(R.string.find_subscribers);
         ((MainActivity) activityThis).getSubscriberAdapter().setSubscribers(result);
         ((MainActivity) activityThis).getSubscriberAdapter().notifyDataSetChanged();
@@ -94,7 +91,7 @@ public class Dialogs {
         Log.d("TAG", result.size() +" - size subscribers in result");
     }
 
-    private List<View> customView() {
+    private List<View> createViewForFind() {
         List<View> result = new ArrayList<>(6);
         LinearLayout l = new LinearLayout(activityThis);
         result.add(l);
