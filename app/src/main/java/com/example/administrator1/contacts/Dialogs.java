@@ -72,12 +72,8 @@ public class Dialogs {
                         String homeNumber = ((EditText) views.get(ET_FIND_HOME_NUMBER)).getText().toString();
 
                         List<Subscriber> result = ((MainActivity) activityThis).findSubscribers( name, email, number, group, homeNumber);
-                        ((MainActivity) activityThis).getSubscriberAdapter().setSubscribers(result);
-                        ( activityThis).getActionBar().setTitle(R.string.find_subscribers);
-                        ((MainActivity) activityThis).getSubscriberAdapter().setSubscribers(result);
-                        ((MainActivity) activityThis).getSubscriberAdapter().notifyDataSetChanged();
-                        ((MainActivity) activityThis).setFindListSubscribers(true);
-                        Log.d("TAG", result.size() +" - size subscribers in result");
+
+                        installFindingSubscribersInList(result);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -87,6 +83,15 @@ public class Dialogs {
                 });
 
         return builder.create();
+    }
+
+    private void installFindingSubscribersInList(List<Subscriber> result){
+        ((MainActivity) activityThis).getSubscriberAdapter().setSubscribers(result);
+         activityThis.getActionBar().setTitle(R.string.find_subscribers);
+        ((MainActivity) activityThis).getSubscriberAdapter().setSubscribers(result);
+        ((MainActivity) activityThis).getSubscriberAdapter().notifyDataSetChanged();
+        ((MainActivity) activityThis).setFindListSubscribers(true);
+        Log.d("TAG", result.size() +" - size subscribers in result");
     }
 
     private List<View> customView() {

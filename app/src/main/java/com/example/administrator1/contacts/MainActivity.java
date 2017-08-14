@@ -133,9 +133,8 @@ public class MainActivity extends Activity {
             subscriberAdapter.setSubscribers(subscribers);
             subscriberAdapter.notifyDataSetChanged();
             return;
-        } else {
-            super.finish();
         }
+            super.finish();
     }
 
     @Override
