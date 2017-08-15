@@ -12,7 +12,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="@string/textEmail" />
+        android:hint="@string/text_email" />
 
     <EditText
         android:id="@+id/subject_for_email"
@@ -24,7 +24,5 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:hint="@string/subject" />
-
-
 
 </LinearLayout>

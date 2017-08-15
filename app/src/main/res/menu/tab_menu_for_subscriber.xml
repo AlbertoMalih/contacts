@@ -3,15 +3,15 @@
 
     <item
         android:id="@+id/call_on_home_phone"
-        android:title="call_on_home_phone" />
+        android:title="@string/call_on_home_phone" />
 
 
     <item
         android:id="@+id/call_on_phone"
-        android:title="call_on_phone" />
+        android:title="@string/call_on_phone" />
 
     <item
         android:id="@+id/send_email"
-        android:title="send_email" />
+        android:title="@string/send_email" />
 
 </menu>

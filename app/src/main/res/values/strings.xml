@@ -5,6 +5,8 @@
     <string name="find">find</string>
     <string name="all_subscribers">all subscribers</string>
     <string name="find_subscribers">find subscribers</string>
+    <string name="call_on_phone">call on phone</string>
+    <string name="call_on_home_phone">call on home phone</string>
     <string name="find_name">find name</string>
     <string name="find_group">find group</string>
     <string name="find_email">find email</string>
@@ -13,6 +15,7 @@
     <string name="create">create</string>
     <string name="back">back11</string>
     <string name="time">time</string>
+    <string name="create_number">create number</string>
     <string name="date">date</string>
     <string name="delete">delete</string>
     <string name="edit">edit</string>
@@ -21,13 +24,13 @@
     <string name="write_home_number">write home number</string>
     <string name="write_number">write number</string>
     <string name="save">save</string>
-    <string name="textEmail">text Email</string>
+    <string name="text_email">text Email</string>
     <string name="subject">subject</string>
     <string name="about_item">about the application</string>
-    <string name="cancel">cansel</string>
+    <string name="cancel">cancel</string>
     <string name="send_email">send email</string>
     <string name="write_email">write email</string>
-    <string name="write_name">write nane</string>
+    <string name="write_name">write name</string>
 
 
     <string name="title_activity_fullscreen" translatable="false">FullscreenActivity</string>

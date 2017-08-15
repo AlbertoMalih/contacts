@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">contacts</string>
+    <string name="about_item">про приложение</string>
+    <string name="all_subscribers">все контакты</string>
+    <string name="back">назад</string>
+    <string name="call_on_home_phone">позвонить на дом. телефон</string>
+    <string name="call_on_phone">позвонить</string>
+    <string name="cancel">закрыть</string>
+    <string name="create">создать</string>
+    <string name="create_number">создать номер</string>
+    <string name="date">дата</string>
+    <string name="delete">удалить</string>
+    <string name="delete_all">удалить все</string>
+    <string name="edit">изменить</string>
+    <string name="find">найти</string>
+    <string name="find_email">найти email</string>
+    <string name="find_group">найти группу</string>
+    <string name="find_home_number">найти дом. телефон</string>
+    <string name="find_name">найти имя</string>
+    <string name="find_number">найти номер</string>
+    <string name="find_subscribers">найти абонента</string>
+    <string name="item_description">описание</string>
+    <string name="save">сохранить</string>
+    <string name="send_email">отправить email</string>
+    <string name="subject">тема</string>
+    <string name="text_email">текст письма</string>
+    <string name="time">время</string>
+    <string name="type">тип</string>
+    <string name="write_email">ввести email</string>
+    <string name="write_group">ввести группу</string>
+    <string name="write_home_number">ввести дом. номер</string>
+    <string name="write_name">ввести имя</string>
+    <string name="write_number">ввести номер</string>
+</resources>

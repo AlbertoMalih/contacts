@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/create_number"
-        android:title="create_number" />
+        android:title="@string/create_number" />
 
 
     <item
@@ -14,6 +14,6 @@
 
 
     <item android:id="@+id/find"
-        android:title="find"/>
+        android:title="@string/find"/>
 
 </menu><!--tools:ignore="AppCompatResource"--><!--android:showAsAction="always"-->
