@@ -2,6 +2,7 @@
     <string name="app_name">contacts</string>
 
     <string name="type">type</string>
+    <string name="import_contacts">import contacts</string>
     <string name="find">find</string>
     <string name="all_subscribers">all subscribers</string>
     <string name="find_subscribers">find subscribers</string>

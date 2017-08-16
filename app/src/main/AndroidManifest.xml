@@ -3,7 +3,14 @@
     package="com.example.administrator1.contacts">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.read_contacts" />
+    <uses-permission android:name="android.permission.read_phone_state" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.ACTION_CALL" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -18,12 +25,6 @@
         </activity>
 
         <activity android:name=".ChangeOrCreateActivity" />
-
-
-        <uses-permission android:name="android.permission.CALL_PHONE" />
-        <uses-permission android:name="android.permission.ACTION_CALL" />
-        <uses-permission android:name="android.permission.INTERNET" />
-        <uses-permission android:name="android.permission.CAMERA" />
 
     </application>
 

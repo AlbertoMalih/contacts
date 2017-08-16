@@ -94,6 +94,7 @@ public class Dialogs {
     private List<View> createViewForFind() {
         List<View> result = new ArrayList<>(6);
         LinearLayout l = new LinearLayout(activityThis);
+        l.setOrientation(LinearLayout.VERTICAL);
         result.add(l);
         EditText etFindName = createETFFind(activityThis.getString(R.string.find_name));
         result.add(ET_FIND_NAME, etFindName);

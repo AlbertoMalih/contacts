@@ -8,31 +8,35 @@
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-        android:textSize="11sp"
+        android:textSize="12sp"
         android:layout_weight="0.04" />
     <!--android:text="@string/about_man"-->
 
 
     <TextView
         android:id="@+id/tvEmail"
+        android:textSize="11sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.06" />
 
     <TextView
         android:id="@+id/tvNumber"
+        android:textSize="11sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.06" />
 
     <TextView
         android:id="@+id/tvHomeNumber"
+        android:textSize="11sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.07" />
 
     <TextView
         android:id="@+id/tvGroup"
+        android:textSize="11sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.06" />

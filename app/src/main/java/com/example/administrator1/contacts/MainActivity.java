@@ -22,29 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    public static final int STOP_CREATE_TASK_BUTTON = 10;
-    public static final int START_CREATE_TASK_BUTTON = 11;
     public static final int CREATE_TASK_CODE = 21;
     public static final int UPDATE_TASK_CODE = 22;
-    private static final int REQUEST_PHONE_CALL = 1;
+    public static final int REQUEST_PHONE_CALL = 1;
+    public static final int REQUEST_READ_BOOK_CONTACTS = 2;
+    private boolean[] premisions = {false, false};
     private DBHelper dbHelper;
     private boolean findListSubscribers = false;
     private volatile List<Subscriber> subscribers;
-    //    private Button createTaskButton;
     private SubscriberAdapter subscriberAdapter;
     private ListView lvTasks;
     private Dialogs dialogs;
     private AdapterView.AdapterContextMenuInfo info;
-//    public final Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            if (msg.what == STOP_CREATE_TASK_BUTTON) {
-//                createTaskButton.setEnabled(false);
-//            } else if (msg.what == START_CREATE_TASK_BUTTON) {
-//                createTaskButton.setEnabled(true);
-//            }
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +41,31 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main);
 
-        InitialElements();
+        if (askPremmissions()) {
+            initialElements();
+        }
     }
 
-    private void InitialElements() {
+    private boolean askPremmissions() {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CONTACTS}, MainActivity.REQUEST_READ_BOOK_CONTACTS);
+        } else {
+            premisions[0] = true;
+        }
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
+        } else {
+            premisions[1] = true;
+        }
+
+        return premisions[0] && premisions[1];
+    }
+
+
+    private void initialElements() {
         subscribers = new ArrayList<>();
         dialogs = new Dialogs(this);
-//        createTaskButton = (Button) findViewById(R.id.btn_create_subscribe);
         dbHelper = new DBHelper(this);
         initialTasks();
     }
@@ -85,9 +92,26 @@ public class MainActivity extends Activity {
             case R.id.create_number:
                 createSubscriber();
                 return true;
+            case R.id.import_contacts:
+                importSubscriber();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void importSubscriber() {
+        List<Subscriber> result = dbHelper.getAllContactsFromBookContacts();
+
+        for (Subscriber subscriber : result) {
+            if (dbHelper.existSubscriber(subscriber)) {
+                continue;
+            }
+            subscribers.add(subscriber);
+            Log.d("Before wrtite to db", "");
+            dbHelper.writeTask(subscriber);
+        }
+        subscriberAdapter.notifyDataSetChanged();
     }
 
     private void findSubscriber() {
@@ -106,9 +130,7 @@ public class MainActivity extends Activity {
     }
 
     private void createSubscriber() {
-//        handler.sendEmptyMessage(STOP_CREATE_TASK_BUTTON);
         createIntentForWorkWithTask(new Subscriber(), CREATE_TASK_CODE, info == null ? 0 : info.position);
-
     }
 
     //todo потом выполнять этот метод в асунк таскке
@@ -118,12 +140,26 @@ public class MainActivity extends Activity {
         subscriberAdapter.notifyDataSetChanged();
     }
 
-//    public void onClickCreateTask(View view) {
-//        handler.sendEmptyMessage(STOP_CREATE_TASK_BUTTON);
-//
-//        createIntentForWorkWithTask(new Subscriber(), CREATE_TASK_CODE, info == null ? 0 : info.position);
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_READ_BOOK_CONTACTS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    premisions[0] = true;
+                }
+                break;
+            case REQUEST_PHONE_CALL:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    premisions[1] = true;
+                }
+                break;
+        }
+        if (premisions[0] && premisions[1]) {
 
+            initialElements();
+        }
+
+    }
 
     @Override
     public void finish() {
@@ -134,7 +170,7 @@ public class MainActivity extends Activity {
             subscriberAdapter.notifyDataSetChanged();
             return;
         }
-            super.finish();
+        super.finish();
     }
 
     @Override
@@ -154,7 +190,6 @@ public class MainActivity extends Activity {
                 }
                 subscriberAdapter.notifyDataSetChanged();
             }
-//            handler.sendEmptyMessage(START_CREATE_TASK_BUTTON);
         }
     }
 
@@ -169,7 +204,6 @@ public class MainActivity extends Activity {
         subscribers.add(subscriber);
         Log.d("Before wrtite to db", "");
         dbHelper.writeTask(subscriber);
-//        handler.sendEmptyMessage(START_CREATE_TASK_BUTTON);
     }
 
 
@@ -216,20 +250,16 @@ public class MainActivity extends Activity {
     }
 
     private void callOnHomePhone(Subscriber subscriber) {
-        checkPremsionOnCallAndCall(
-                new Intent(Intent.ACTION_CALL,
-                        Uri.parse("tel:" + subscriber.getHomeNumber()))
-        );
+        checkPremissionOnCallAndCall(new Intent(Intent.ACTION_CALL,
+                Uri.parse("tel:" + subscriber.getHomeNumber())));
     }
 
     private void callOnPhone(Subscriber subscriber) {
-        checkPremsionOnCallAndCall(
-                new Intent(Intent.ACTION_CALL,
-                        Uri.parse("tel:" + subscriber.getNumber()))
-        );
+        checkPremissionOnCallAndCall(new Intent(Intent.ACTION_CALL,
+                Uri.parse("tel:" + subscriber.getNumber())));
     }
 
-    private void checkPremsionOnCallAndCall(Intent intent) {
+    private void checkPremissionOnCallAndCall(Intent intent) {
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
         }

@@ -9,7 +9,7 @@ public class Subscriber implements Parcelable {
     private String homeNumber = "";
     private String email = "";
     private String name = "";
-    private long id = 0;
+    private long id = -1;
 
     public Subscriber() {
     }

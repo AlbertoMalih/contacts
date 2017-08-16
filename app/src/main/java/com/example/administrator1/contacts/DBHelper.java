@@ -7,10 +7,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
+import static android.provider.ContactsContract.CommonDataKinds.Phone;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -78,6 +82,19 @@ public class DBHelper extends SQLiteOpenHelper {
         Toast.makeText(activityThis, count + "", Toast.LENGTH_LONG);
     }
 
+    public boolean existSubscriber(Subscriber subscriber) {
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor count = database.rawQuery("SELECT * FROM "  + MYTABLE + " WHERE " + NUMBER + " = ? AND " + NAME + " = ?;", new String[]{subscriber.getNumber(), subscriber.getName()});
+        if (count.moveToFirst()) {
+            database.close();
+            return true;
+        }
+
+        database.close();
+        Toast.makeText(activityThis, count + "", Toast.LENGTH_LONG);
+        return false;
+    }
+
     public void writeTask(Subscriber subscriber) {
         Log.d("TAG", " database start get");
         SQLiteDatabase database = getWritableDatabase();
@@ -88,11 +105,34 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(NUMBER, subscriber.getNumber());
         cv.put(HOME_NUMBER, subscriber.getHomeNumber());
         cv.put(EMAIL, subscriber.getEmail());
+        if (subscriber.getId() >= 0){
+            cv.put("ID", subscriber.getId());
+        }
         long id = database.insert(DBHelper.MYTABLE, null, cv);
         subscriber.setId(id);
         database.close();
         Toast.makeText(activityThis, String.valueOf(id), Toast.LENGTH_SHORT).show();
         Log.d("Count insert", id + "");
+    }
+
+    public List<Subscriber> getAllContactsFromBookContacts() {
+        List<Subscriber> result = new ArrayList<>();
+
+        Cursor cursor = activityThis.getContentResolver()
+                .query(
+                        Phone.CONTENT_URI, new String[]{Phone._ID, Phone.IN_VISIBLE_GROUP, Phone.DISPLAY_NAME, Phone.NUMBER},
+                        null, null, Phone.DISPLAY_NAME + " ASC"
+                );
+
+        while (cursor.moveToNext()) {
+            Subscriber subscriber = new Subscriber();
+            subscriber.setName( cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME)));
+            subscriber.setNumber(cursor.getString(cursor.getColumnIndex(Phone.NUMBER)));
+            result.add(subscriber);
+            Log.e("id", cursor.getString(cursor.getColumnIndex(Phone._ID)));
+        }
+        cursor.close();
+        return result;
     }
 
     public void setAllTasksToList(final List<Subscriber> subscribers) {
@@ -106,15 +146,11 @@ public class DBHelper extends SQLiteOpenHelper {
         public InitialAllTask(MainActivity mainActivity) {
             this.mainActivity = mainActivity;
         }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            mainActivity.handler.sendEmptyMessage(MainActivity.STOP_CREATE_TASK_BUTTON);
-//        }
 
         @Override
         protected List<Subscriber> doInBackground(Void... voids) {
             List<Subscriber> result = new ArrayList<>();
+//            result.addAll(getAllContactsFromBookContacts());
             SQLiteDatabase database = DBHelper.this.getWritableDatabase();
             Cursor c = database.query(DBHelper.MYTABLE, null, null, null, null, null, null);
             if (c.moveToNext()) {
@@ -136,22 +172,16 @@ public class DBHelper extends SQLiteOpenHelper {
                     subscriber.setHomeNumber(c.getString(homeNumberIndex));
                     subscriber.setId(c.getLong(idIndex));
                 } while (c.moveToNext());
-            } else {
-//                    Toast.makeText(activityThis, "0 rows", Toast.LENGTH_SHORT).show();
-                Log.e("COUNT IN DB == 0", "");
             }
-            Log.e("TAG size of ", result.size() + "");
+
             c.close();
             database.close();
-//            mainActivity.handler.sendEmptyMessage(MainActivity.START_CREATE_TASK_BUTTON);
             return result;
         }
 
         @Override
         protected void onPostExecute(List<Subscriber> subscribers) {
-//            mainActivity.handler.sendEmptyMessage(MainActivity.START_CREATE_TASK_BUTTON);
             mainActivity.setSubscribers(subscribers);
-            Log.e("TAG size of com.example", subscribers.size() + "");
             mainActivity.setAllTasksToView(subscribers);
         }
     }

@@ -1,8 +1,6 @@
 package com.example.administrator1.contacts;
 
 import android.content.Context;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +38,7 @@ public class SubscriberAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         View friendView = convertView;
         if (friendView == null) {
-            friendView = LayoutInflater.from(c).inflate(R.layout.change, null);
+            friendView = LayoutInflater.from(c).inflate(R.layout.item, null);
         }
 
         Subscriber p = subscribers.get(position);
