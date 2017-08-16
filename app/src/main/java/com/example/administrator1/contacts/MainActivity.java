@@ -35,6 +35,10 @@ public class MainActivity extends Activity {
     private Dialogs dialogs;
     private AdapterView.AdapterContextMenuInfo info;
 
+    public MainActivity() {
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

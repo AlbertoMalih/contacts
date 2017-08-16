@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
@@ -18,24 +19,28 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public static final String TASKS_SQLITE = "subscribers_table.sqlite";
-    public static final int VERSION = 1;
-    public static final String MYTABLE = "subscribers_table";
+    private static final String TASKS_SQLITE = "subscribers_table.sqlite";
+    private static final int VERSION = 1;
+    private static final String MYTABLE = "subscribers_table";
     public static final String GROUP_CONTACT = "GROUP_CONTACT";
     public static final String NAME = "NAME";
     public static final String EMAIL = "EMAIL";
     public static final String NUMBER = "NUMBER";
     public static final String HOME_NUMBER = "HOME_NUMBER";
 
-    private Activity activityThis;
-    private MainActivity mainActivity;
+    private Context activityThis;
 
     //todo поработать с жизненными стадиями проекта и закрытием и создданием обьектов этого класса
 
+
+//    public DBHelper(Context context, String type) {
+//        super(context, TASKS_SQLITE, null, VERSION);
+//        activityThis = new MainActivity();
+//    }
+
     public DBHelper(Context context) {
         super(context, TASKS_SQLITE, null, VERSION);
-        activityThis = (Activity) context;
-        mainActivity = ((MainActivity) activityThis);
+        activityThis = context;
     }
 
     @Override
@@ -72,14 +77,12 @@ public class DBHelper extends SQLiteOpenHelper {
 //                " = ? AND " + NAME + " = ?", new String[]{subscriber.getDescription(), subscriber.getPartner(), subscriber.getType().name(), subscriber.getDate().toString()});
         int count = database.delete(MYTABLE, "ID = ?", new String[]{subscriber.getId() + ""});
         database.close();
-        Toast.makeText(activityThis, count + "", Toast.LENGTH_LONG);
     }
 
     public void deleteAllTask() {
         SQLiteDatabase database = getWritableDatabase();
         int count = database.delete(MYTABLE, null, null);
         database.close();
-        Toast.makeText(activityThis, count + "", Toast.LENGTH_LONG);
     }
 
     public boolean existSubscriber(Subscriber subscriber) {
@@ -91,7 +94,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         database.close();
-        Toast.makeText(activityThis, count + "", Toast.LENGTH_LONG);
         return false;
     }
 
@@ -115,6 +117,36 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d("Count insert", id + "");
     }
 
+    public List<Subscriber> getAllContacts() {
+        List<Subscriber> result = new ArrayList<>();
+        SQLiteDatabase database = DBHelper.this.getWritableDatabase();
+        Cursor c = database.query(DBHelper.MYTABLE, null, null, null, null, null, null);
+        if (c.moveToNext()) {
+            int idIndex = c.getColumnIndex("ID");
+            int groupIndex = c.getColumnIndex(DBHelper.GROUP_CONTACT);
+            int nameIndex = c.getColumnIndex(DBHelper.NAME);
+            int emailIndex = c.getColumnIndex(DBHelper.EMAIL);
+            int numberIndex = c.getColumnIndex(DBHelper.NUMBER);
+            int homeNumberIndex = c.getColumnIndex(DBHelper.HOME_NUMBER);
+            Log.e("TAG", "count: " + c.getCount() + " " + idIndex + " " +
+                    emailIndex + " " + numberIndex + " " + nameIndex);
+            do {
+                Subscriber subscriber = new Subscriber();
+                result.add(subscriber);
+                subscriber.setGroup(c.getString(groupIndex));
+                subscriber.setEmail(c.getString(emailIndex));
+                subscriber.setNumber(c.getString(numberIndex));
+                subscriber.setName(c.getString(nameIndex));
+                subscriber.setHomeNumber(c.getString(homeNumberIndex));
+                subscriber.setId(c.getLong(idIndex));
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        database.close();
+        return result;
+    }
+
     public List<Subscriber> getAllContactsFromBookContacts() {
         List<Subscriber> result = new ArrayList<>();
 
@@ -136,7 +168,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void setAllTasksToList(final List<Subscriber> subscribers) {
-        new InitialAllTask(mainActivity).execute();
+        new InitialAllTask((MainActivity) activityThis).execute();
     }
 
 
@@ -149,34 +181,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         @Override
         protected List<Subscriber> doInBackground(Void... voids) {
-            List<Subscriber> result = new ArrayList<>();
-//            result.addAll(getAllContactsFromBookContacts());
-            SQLiteDatabase database = DBHelper.this.getWritableDatabase();
-            Cursor c = database.query(DBHelper.MYTABLE, null, null, null, null, null, null);
-            if (c.moveToNext()) {
-                int idIndex = c.getColumnIndex("ID");
-                int groupIndex = c.getColumnIndex(DBHelper.GROUP_CONTACT);
-                int nameIndex = c.getColumnIndex(DBHelper.NAME);
-                int emailIndex = c.getColumnIndex(DBHelper.EMAIL);
-                int numberIndex = c.getColumnIndex(DBHelper.NUMBER);
-                int homeNumberIndex = c.getColumnIndex(DBHelper.HOME_NUMBER);
-                Log.e("TAG", "count: " + c.getCount() + " " + idIndex + " " +
-                        emailIndex + " " + numberIndex + " " + nameIndex);
-                do {
-                    Subscriber subscriber = new Subscriber();
-                    result.add(subscriber);
-                    subscriber.setGroup(c.getString(groupIndex));
-                    subscriber.setEmail(c.getString(emailIndex));
-                    subscriber.setNumber(c.getString(numberIndex));
-                    subscriber.setName(c.getString(nameIndex));
-                    subscriber.setHomeNumber(c.getString(homeNumberIndex));
-                    subscriber.setId(c.getLong(idIndex));
-                } while (c.moveToNext());
-            }
-
-            c.close();
-            database.close();
-            return result;
+            return getAllContacts();
         }
 
         @Override

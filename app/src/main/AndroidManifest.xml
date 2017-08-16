@@ -16,6 +16,7 @@
         android:allowBackup="true"
         android:label="@string/all_subscribers"
         android:supportsRtl="true">
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +27,17 @@
 
         <activity android:name=".ChangeOrCreateActivity" />
 
-    </application>
 
+        <provider
+            android:authorities="contactsBook.provider.contacts"
+            android:name=".ContactsProvider"
+            android:exported="true">
+            <path-permission
+                android:path="items"
+                android:permission="contactsBook.provider.contacts.ITEMS" />
+        </provider>
+
+
+    </application>
 
 </manifest>
