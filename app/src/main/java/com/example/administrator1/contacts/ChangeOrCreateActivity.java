@@ -65,7 +65,7 @@ public class ChangeOrCreateActivity extends Activity {
 
         subscriber.setEmail(email.trim());
         subscriber.setName(editName.getText().toString().trim());
-        subscriber.setNumber(number.trim());
+        subscriber.setNumber(editPhone.getText().toString().trim());
         subscriber.setHomeNumber(editHomePhone.getText().toString().trim());
         subscriber.setGroup(editGroup.getText().toString().trim());
 
@@ -75,11 +75,11 @@ public class ChangeOrCreateActivity extends Activity {
     }
 
     private boolean checkIncorrectData(){
-         number = editPhone.getText().toString();
-        if (!Utils.checkValidNumber(number)) {
-            Toast.makeText(this, "invalid number", Toast.LENGTH_LONG).show();
-            return true;
-        }
+//         number = editPhone.getText().toString();
+//        if (!Utils.checkValidNumber(number)) {
+//            Toast.makeText(this, "invalid number", Toast.LENGTH_LONG).show();
+//            return true;
+//        }
 
          email = editEmail.getText().toString();
         if (!Utils.checkValidEmail(email)) {

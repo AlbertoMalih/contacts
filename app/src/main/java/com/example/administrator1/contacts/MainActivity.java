@@ -2,6 +2,7 @@ package com.example.administrator1.contacts;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -112,7 +113,6 @@ public class MainActivity extends Activity {
                 continue;
             }
             subscribers.add(subscriber);
-            Log.d("Before wrtite to db", "");
             dbHelper.writeTask(subscriber);
         }
         subscriberAdapter.notifyDataSetChanged();
@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
 
     public void afterUpdateTask(Intent data) {
         Subscriber subscriber = data.getExtras().getParcelable("subscriber");
-        dbHelper.updateTask(subscriber);
+        dbHelper.updateSubscriber(subscriber);
         subscribers.get(data.getExtras().getInt("position_task")).update(subscriber);
     }
 
@@ -318,7 +318,7 @@ public class MainActivity extends Activity {
     public void deleteTask() {
         Subscriber subscriber = getTaskByPosition();
 
-        dbHelper.deleteSubscribe(subscriber);
+        dbHelper.deleteSubscribeForId(subscriber);
         subscribers.remove(subscriber);
         subscriberAdapter.notifyDataSetChanged();
     }

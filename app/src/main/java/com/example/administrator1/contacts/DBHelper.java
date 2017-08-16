@@ -32,15 +32,23 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //todo поработать с жизненными стадиями проекта и закрытием и создданием обьектов этого класса
 
-
-//    public DBHelper(Context context, String type) {
-//        super(context, TASKS_SQLITE, null, VERSION);
-//        activityThis = new MainActivity();
-//    }
-
     public DBHelper(Context context) {
         super(context, TASKS_SQLITE, null, VERSION);
         activityThis = context;
+//        reindexingDB();
+    }
+
+    public void reindexingDB() {
+        SQLiteDatabase database = getWritableDatabase();
+        long id = 1;
+        List<Subscriber> list = getAllContacts();
+        deleteAllTask();
+        for (Subscriber subscriber : list) {
+            subscriber.setId(id);
+            writeTask(subscriber);
+            ++id;
+        }
+        database.close();
     }
 
     @Override
@@ -57,7 +65,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void updateTask(Subscriber subscriber) {
+    public int updateSubscriber(Subscriber subscriber) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(NAME, subscriber.getName());
@@ -65,18 +73,56 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(NUMBER, subscriber.getNumber());
         cv.put(HOME_NUMBER, subscriber.getHomeNumber());
         cv.put(EMAIL, subscriber.getEmail());
-        long count = database.update(DBHelper.MYTABLE, cv, "ID = ?", new String[]{subscriber.getId() + ""});
+        int count = database.update(DBHelper.MYTABLE, cv, "ID = ?", new String[]{subscriber.getId() + ""});
         database.close();
         Toast.makeText(activityThis, String.valueOf(count), Toast.LENGTH_SHORT).show();
         Log.d("Count insert", count + "");
+        return count;
     }
 
-    public void deleteSubscribe(Subscriber subscriber) {
+    public Subscriber getSubscriberOnId(long id) {
+        Subscriber subscriber = null;
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + MYTABLE + " WHERE ID = ?;", new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+                subscriber = new Subscriber();
+                subscriber.setGroup(cursor.getString(cursor.getColumnIndex(GROUP_CONTACT)));
+                subscriber.setEmail(cursor.getString(cursor.getColumnIndex(EMAIL)));
+                subscriber.setNumber(cursor.getString(cursor.getColumnIndex(NUMBER)));
+                subscriber.setName(cursor.getString(cursor.getColumnIndex(NAME)));
+                subscriber.setHomeNumber(cursor.getString(cursor.getColumnIndex(HOME_NUMBER)));
+                subscriber.setId(cursor.getLong(cursor.getColumnIndex("ID")));
+        }
+        cursor.close();
+        return subscriber;
+    }
+
+    public long getIdOnDate(Subscriber subscriber) {
+        long id = -1;
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT ID FROM " + MYTABLE + " WHERE " + GROUP_CONTACT + " = ? AND " + EMAIL + " = ? AND " + NUMBER +
+                " = ? AND " + NAME + " = ? AND " + HOME_NUMBER + " = ?;", new String[]{subscriber.getGroup(), subscriber.getEmail(), subscriber.getNumber(),
+                subscriber.getName(), subscriber.getHomeNumber()});
+
+        if (cursor.moveToFirst()) {
+                id = cursor.getLong(cursor.getColumnIndex("ID"));
+        }
+        cursor.close();
+        return id;
+    }
+
+    public int deleteSubscribeForData(Subscriber subscriber){
         SQLiteDatabase database = getWritableDatabase();
-//        int count = database.delete(MYTABLE, GROUP + " = ? AND " + EMAIL + " = ? AND " + NUMBER +
-//                " = ? AND " + NAME + " = ?", new String[]{subscriber.getDescription(), subscriber.getPartner(), subscriber.getType().name(), subscriber.getDate().toString()});
+        int count = database.delete(MYTABLE, GROUP_CONTACT + " = ? AND " + EMAIL + " = ? AND " + NUMBER +
+                " = ? AND " + NAME + " = ? AND " + HOME_NUMBER + " = ?;", new String[]{subscriber.getGroup(), subscriber.getEmail(), subscriber.getNumber(),
+                subscriber.getName(), subscriber.getHomeNumber()});
+        database.close();
+        return count;
+    }
+
+    public int deleteSubscribeForId(Subscriber subscriber) {
+        SQLiteDatabase database = getWritableDatabase();
         int count = database.delete(MYTABLE, "ID = ?", new String[]{subscriber.getId() + ""});
         database.close();
+        return count;
     }
 
     public void deleteAllTask() {
@@ -87,7 +133,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean existSubscriber(Subscriber subscriber) {
         SQLiteDatabase database = getReadableDatabase();
-        Cursor count = database.rawQuery("SELECT * FROM "  + MYTABLE + " WHERE " + NUMBER + " = ? AND " + NAME + " = ?;", new String[]{subscriber.getNumber(), subscriber.getName()});
+        Cursor count = database.rawQuery("SELECT * FROM " + MYTABLE + " WHERE " + NUMBER + " = ? AND " + NAME + " = ?;", new String[]{subscriber.getNumber(), subscriber.getName()});
         if (count.moveToFirst()) {
             database.close();
             return true;
@@ -98,23 +144,20 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void writeTask(Subscriber subscriber) {
-        Log.d("TAG", " database start get");
         SQLiteDatabase database = getWritableDatabase();
-        Log.d("TAG", " database suc get");
         ContentValues cv = new ContentValues();
         cv.put(NAME, subscriber.getName());
         cv.put(GROUP_CONTACT, subscriber.getGroup());
         cv.put(NUMBER, subscriber.getNumber());
         cv.put(HOME_NUMBER, subscriber.getHomeNumber());
         cv.put(EMAIL, subscriber.getEmail());
-        if (subscriber.getId() >= 0){
+        if (subscriber.getId() > 0) {
             cv.put("ID", subscriber.getId());
         }
         long id = database.insert(DBHelper.MYTABLE, null, cv);
         subscriber.setId(id);
         database.close();
         Toast.makeText(activityThis, String.valueOf(id), Toast.LENGTH_SHORT).show();
-        Log.d("Count insert", id + "");
     }
 
     public List<Subscriber> getAllContacts() {
@@ -122,23 +165,16 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = DBHelper.this.getWritableDatabase();
         Cursor c = database.query(DBHelper.MYTABLE, null, null, null, null, null, null);
         if (c.moveToNext()) {
-            int idIndex = c.getColumnIndex("ID");
-            int groupIndex = c.getColumnIndex(DBHelper.GROUP_CONTACT);
-            int nameIndex = c.getColumnIndex(DBHelper.NAME);
-            int emailIndex = c.getColumnIndex(DBHelper.EMAIL);
-            int numberIndex = c.getColumnIndex(DBHelper.NUMBER);
-            int homeNumberIndex = c.getColumnIndex(DBHelper.HOME_NUMBER);
-            Log.e("TAG", "count: " + c.getCount() + " " + idIndex + " " +
-                    emailIndex + " " + numberIndex + " " + nameIndex);
             do {
                 Subscriber subscriber = new Subscriber();
                 result.add(subscriber);
-                subscriber.setGroup(c.getString(groupIndex));
-                subscriber.setEmail(c.getString(emailIndex));
-                subscriber.setNumber(c.getString(numberIndex));
-                subscriber.setName(c.getString(nameIndex));
-                subscriber.setHomeNumber(c.getString(homeNumberIndex));
-                subscriber.setId(c.getLong(idIndex));
+                subscriber.setGroup(c.getString(c.getColumnIndex(DBHelper.GROUP_CONTACT)));
+                subscriber.setEmail(c.getString(c.getColumnIndex(DBHelper.EMAIL)));
+                subscriber.setNumber(c.getString(c.getColumnIndex(DBHelper.NUMBER)));
+                subscriber.setName(c.getString(c.getColumnIndex(DBHelper.NAME)));
+                subscriber.setHomeNumber(c.getString(c.getColumnIndex(DBHelper.HOME_NUMBER)));
+                subscriber.setId(c.getLong(c.getColumnIndex("ID")));
+                Log.e("id", subscriber.getId() +"");
             } while (c.moveToNext());
         }
 
@@ -158,7 +194,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         while (cursor.moveToNext()) {
             Subscriber subscriber = new Subscriber();
-            subscriber.setName( cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME)));
+            subscriber.setName(cursor.getString(cursor.getColumnIndex(Phone.DISPLAY_NAME)));
             subscriber.setNumber(cursor.getString(cursor.getColumnIndex(Phone.NUMBER)));
             result.add(subscriber);
             Log.e("id", cursor.getString(cursor.getColumnIndex(Phone._ID)));
@@ -177,6 +213,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
         public InitialAllTask(MainActivity mainActivity) {
             this.mainActivity = mainActivity;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            reindexingDB();
         }
 
         @Override
