@@ -34,11 +34,11 @@ public class Subscriber implements Parcelable {
     }
 
     public boolean equalInValues(String name, String email, String number, String group, String homeNumber){
-        boolean validName = (name.isEmpty() || this.name.contains(name));//( name.isEmpty() ? true : this.name.equals(name));
-        boolean validGroup = (group.isEmpty() || this.group.contains(group));//( group.isEmpty() ? true : this.group.equals(group));
-        boolean validEmail = (email.isEmpty() || this.email.contains(email));//( email.isEmpty() ? true : this.email.equals(email));
-        boolean validNumber = (number.isEmpty() || this.number.contains(number));//( number.isEmpty() ? true : this.number.equals(number));
-        boolean validHomeNumber = (homeNumber.isEmpty() || this.homeNumber.contains(homeNumber));// ( homeNumber.isEmpty() ? true : this.homeNumber.equals(homeNumber));
+        boolean validName = (name.isEmpty() || this.name.toUpperCase().contains(name.toUpperCase()));//( name.isEmpty() ? true : this.name.equals(name));
+        boolean validGroup = (group.isEmpty() || this.group.toUpperCase().contains(group.toUpperCase()));//( group.isEmpty() ? true : this.group.equals(group));
+        boolean validEmail = (email.isEmpty() || this.email.toUpperCase().contains(email.toUpperCase()));//( email.isEmpty() ? true : this.email.equals(email));
+        boolean validNumber = (number.isEmpty() || this.number.toUpperCase().contains(number.toUpperCase()));//( number.isEmpty() ? true : this.number.equals(number));
+        boolean validHomeNumber = (homeNumber.isEmpty() || this.homeNumber.toUpperCase().contains(homeNumber.toUpperCase()));// ( homeNumber.isEmpty() ? true : this.homeNumber.equals(homeNumber));
 
         if (validHomeNumber && validEmail && validNumber && validName && validGroup) {
             return true;
