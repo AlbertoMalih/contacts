@@ -7,8 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,6 @@ public class Dialogs {
                 .setPositiveButton(R.string.find, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //todo findMethod
                         String name = ((EditText) views.get(ET_FIND_NAME)).getText().toString().trim();
                         String email = ((EditText) views.get(ET_FIND_EMAIL)).getText().toString().trim();
                         String number = ((EditText) views.get(ET_FIND_NUMBER)).getText().toString().trim();
